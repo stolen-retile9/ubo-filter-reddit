@@ -1,0 +1,48 @@
+! --- Reddit ---
+
+! Set revealed + prevent remove revealed
+www.reddit.com##+js(trusted-set, HTMLElement.prototype.__blurred, { value: "false" })
+www.reddit.com##+js(trusted-suppress-native-method, Node.prototype.removeChild, '{ "slot": "revealed" }', prevent)
+
+! Show NSFW results in search
+www.reddit.com##+js(set-cookie, over18, 1, , , , domain=.reddit.com)
+
+! Unblur post search thumbnails
+www.reddit.com##.thumbnail-blur:style(filter: none !important; opacity: 1 !important;)
+www.reddit.com##:remove-class(thumbnail-blur)
+! Related posts thumbnails unblur + NSFW icon overlay
+www.reddit.com##img[style*="filter: blur"]:style(filter: none !important;)
+www.reddit.com##.thumbnail-shadow > div.bg-media-background
+
+! Remove NSFW post overlays and blur + remove scroll/click block
+www.reddit.com##.prompt, .bg-scrim, .overlay, .viewInApp, #configured-xpromo-blocking_xpromo_nsfw_blocking_desktop, #blocking-modal, #nsfw-qr-dialog, body > [style*="blur(4px)"]
+www.reddit.com##body.rpl-scroll-lock:style(overflow: auto !important; padding-right: 0 !important;)
+
+! NSFW video gate: neutralize blocking state instead of removing the modal
+www.reddit.com##+js(remove-attr, queued|blocking|open, rpl-dialog[dialog-id^="configured-xpromo"], stay)
+www.reddit.com##+js(remove-attr, queued|blocking|open, rpl-bottom-sheet[dialog-id^="configured-xpromo"], stay)
+www.reddit.com##+js(remove-attr, data-blocks-background-playback, div[id^="configured-xpromo"], stay)
+
+! Embedded players usability + frame growing (works on feed AND comments pages)
+www.reddit.com##main shreddit-feed div.relative.pointer-events-none:style(pointer-events: auto !important;)
+www.reddit.com##main [data-aspect-ratio-container]:style(min-height: 0 !important;)
+www.reddit.com##main [data-aspect-ratio-container] div.relative:style(height: 100% !important;)
+www.reddit.com##main shreddit-blurred-container:style(display: block !important; height: 100% !important;)
+www.reddit.com##main shreddit-async-loader[bundlename="embed"]:style(display: block !important; width: 100% !important; height: 100% !important;)
+www.reddit.com##main shreddit-embed:style(display: block !important; width: 100% !important; height: 100% !important;)
+
+! NSFW embed: force hydration of deferred players (comments page)
+www.reddit.com##+js(remove-attr, data-embed-obscured-deferred, shreddit-embed, stay)
+www.reddit.com##+js(remove-attr, data-embed-obscured-deferred, shreddit-async-loader[bundlename="embed"], stay)
+www.reddit.com##+js(trusted-suppress-native-method, Element.prototype.closest, '"xpromo-nsfw-blocking-container"', prevent)
+
+! Desktop: Show sidebar burger menu button
+www.reddit.com##button#navbar-menu-button:style(display: inline-flex !important;)
+! Desktop: Banner Join the most real place on the internet
+www.reddit.com##faceplate-tracker[noun="static_left_rail_banner"]
+
+! Log in, Sign up, Open App buttons top right
+www.reddit.com###login-button, #signup-button, #open-app-header-cta
+
+! Mobile: Unclosable popups
+www.reddit.com##.configured-xpromo-floating-bar, .configured-xpromo-modal, .configured-xpromo-bottom-sheet, .configured-xpromo-bottom-sheet-v2
